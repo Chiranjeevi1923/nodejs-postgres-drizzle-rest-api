@@ -22,7 +22,7 @@ Create a `.env` file in the root directory:
 
 ```env
 PORT=3000
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myapp_db
+DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:5432/<DB_NAME>
 ```
 
 ## 🐳 PostgreSQL with Docker
@@ -35,6 +35,11 @@ docker compose up -d
 Stop PostgreSQL:
 ```
 docker compose down
+```
+
+To Push Schema Changes:
+```
+npx drizzle-kit push
 ```
 
 To Open Drizzle Studio:
