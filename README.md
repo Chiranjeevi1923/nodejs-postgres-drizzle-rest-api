@@ -22,7 +22,7 @@ Create a `.env` file in the root directory:
 
 ```env
 PORT=3000
-DATABASE_URL=postgresql://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:5432/<DB_NAME>
+DATABASE_URL=postgres://<DB_USER>:<DB_PASSWORD>@<DB_HOST>:5432/<DB_NAME>
 ```
 
 ## 🐳 PostgreSQL with Docker
