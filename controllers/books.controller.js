@@ -25,7 +25,6 @@ export const getAllBooks = async (req, res) => {
         .leftJoin(authorTable, eq(booksTable.authorId, authorTable.id));
         res.json(result);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Something went wrong, please try again later." });
     }
 };
@@ -45,7 +44,6 @@ export const getBookById = async (req, res) => {
         }
         res.json(book[0]);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Something went wrong, please try again later." });
     }
 };
