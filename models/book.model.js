@@ -1,4 +1,5 @@
-import { pgTable, varchar, uuid, text } from "drizzle-orm/pg-core";
+import { pgTable, varchar, uuid, text, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { authorTable } from "./author.model.js";
 
 export const booksTable = pgTable("books", {
@@ -8,4 +9,8 @@ export const booksTable = pgTable("books", {
     authorId: uuid()
         .references(() => authorTable.id)  // Foreign key reference to authors table
         .notNull(),
-});
+}, (table) => [
+    index("title_search_index")
+        .using('gin', sql`to_tsvector('english', ${table.title})`)
+]
+);

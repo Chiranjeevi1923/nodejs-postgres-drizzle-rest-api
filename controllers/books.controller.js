@@ -1,12 +1,31 @@
 import { booksTable } from "../models/book.model.js";
 import db from "../db/index.js";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { authorTable } from "../models/author.model.js";
 
 export const getAllBooks = async (req, res) => {
     try {
-        const result = await db.select().from(booksTable);
+        const search = req.query.search?.trim() || "";
+
+        if (search && search !== "") {
+            const result = await db
+                .select()
+                .from(booksTable)
+                .where(
+                    sql`to_tsvector('english', ${booksTable.title}) @@ to_tsquery('english', ${search})`
+                )
+                .leftJoin(authorTable, eq(booksTable.authorId, authorTable.id));
+
+
+            return res.json(result);
+        }
+
+        const result = await db.select()
+        .from(booksTable)
+        .leftJoin(authorTable, eq(booksTable.authorId, authorTable.id));
         res.json(result);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Something went wrong, please try again later." });
     }
 };
@@ -18,6 +37,7 @@ export const getBookById = async (req, res) => {
             .select()
             .from(booksTable)
             .where(eq(booksTable.id, bookId))
+            .leftJoin(authorTable, eq(booksTable.authorId, authorTable.id))
             .limit(1);
 
         if (book.length === 0) {
@@ -25,6 +45,7 @@ export const getBookById = async (req, res) => {
         }
         res.json(book[0]);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Something went wrong, please try again later." });
     }
 };
